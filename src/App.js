@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import CenMenu from './CenMenu';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import logo from './logo.png';
+
+class App extends Component {
+  render() {
+    let links = [
+      { label: 'Home', link: '#home', active: true },
+      { label: 'About', link: '#about' },
+      { label: 'Create Account', link: '#createAccount' },
+      { label: 'Login', link: '#login' },
+    ];
+
+    return (
+      <div className="container center">
+        <CenMenu links={links} logo={logo} />
+      </div>
+    );
+  }
 }
 
 export default App;
