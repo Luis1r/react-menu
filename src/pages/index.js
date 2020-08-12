@@ -4,7 +4,7 @@ import React from "react";
 const MainPage = () => {
     return (
         <div className="container center">
-            <h3>Welcome to out humble abode!</h3>
+            <h3>Welcome to our humble abode!</h3>
             <small>Main Page</small>
         </div>
     );
