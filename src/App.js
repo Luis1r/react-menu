@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
+import ReactDOM from "react-dom";
 import { connect } from 'react-redux'
 
 //Components
 import Status from './components/Status'
-import CenMenu from './components/menu/CenMenu';
 
 //Import all needed Components for changing pages
 import {
-    BrowserRouter as Router,
+    BrowserRouter,
     Route,
     Switch,
     Link,
     Redirect
 } from "react-router-dom";
-import logo from './logo.png';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles.css";
+import Navbar from "./navbar";
 import ReactGA from 'react-ga'
 
 import * as actions from './actions'
@@ -26,8 +28,6 @@ import NotFoundPage from "./pages/404";
 import UploadPage from "./pages/myUploads";
 import NodePage from "./pages/myNode";
 import AboutUsPage from "./pages/aboutUs";
-
-
 
 class App extends Component {
     initGA() {
@@ -54,42 +54,28 @@ class App extends Component {
 
     render() {
         let isLogin = false;
-        let links;
-        if (isLogin) {
-            links = [
-                { label: 'Home', link: './', active: true },
-                { label: 'About', link: './aboutUs' },
-                { label: 'userName', link: './myNode' },
-            ];
-        } else {
-            links = [
-                { label: 'Home', link: './', active: true },
-                { label: 'About', link: './aboutUs' },
-                { label: 'Create Account', link: './myUploads' },
-                { label: 'Login', link: './myNode' },
-            ];
-        }
         return (
-            <>
-                <CenMenu links={links} logo={logo} />
-                <Status ipfs={this.props.ipfs} {...this.props} />
-                <Router>
-                    <Switch>
-                        {/*All our Routes go here!*/}
-                        <Route exact path="/" component={MainPage} />
-                        <Route exact path="/myUploads" component={UploadPage} />
-                        <Route exact path="/myNode" component={NodePage} />
-                        <Route exact path="/aboutUs" component={AboutUsPage} />
-                        <Route exact path="/404" component={NotFoundPage} />
-                        <Redirect to="/404" /> 
-                    </Switch>
-                </Router>
-            </>
-
-
+        <BrowserRouter>
+            <React.Fragment>
+              <Navbar />
+              <div className="container">
+                <Switch>
+                  {/*All our Routes go here!*/}
+                  <Route exact path="/" component={MainPage} />
+                    <Route exact path="/myUploads" component={UploadPage} />
+                    <Route exact path="/myNode" component={NodePage} />
+                    <Route exact path="/aboutUs" component={AboutUsPage} />
+                    <Route exact path="/404" component={NotFoundPage} />
+                    <Redirect to="/404" /> 
+                </Switch>
+              </div>
+            </React.Fragment>
+        </BrowserRouter>
     );
   }
 }
+
+const rootElement = document.getElementById("root");
 
 function mapStateToProps(state) {
     return {
