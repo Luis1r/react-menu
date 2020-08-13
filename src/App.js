@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+
+//Components
+import Status from './components/Status'
 import CenMenu from './components/menu/CenMenu';
+
 //Import all needed Components for changing pages
 import {
     BrowserRouter as Router,
@@ -9,6 +14,11 @@ import {
     Redirect
 } from "react-router-dom";
 import logo from './logo.png';
+import ReactGA from 'react-ga'
+
+import * as actions from './actions'
+import Header from './containers/Header'
+import Footer from './containers/Footer'
 //Pages
 import MainPage from "./pages/index"; ///< index.js will be automatically imported 
 //And render that route with the MainPage component for the root path /
@@ -20,6 +30,28 @@ import AboutUsPage from "./pages/aboutUs";
 
 
 class App extends Component {
+    initGA() {
+        ReactGA.initialize(process.env.GA_TRACKING_ID)
+        console.log('Initialized')
+    }
+
+    logPageView() {
+        ReactGA.set({ page: window.location.pathname })
+        ReactGA.pageview(window.location.pathname)
+        console.log(`Logged: ${window.location.pathname}`)
+    }
+
+    componentDidMount() {
+        this.props.initIPFS()
+        if (process.env.NODE_ENV === 'production') {
+            if (!window.GA_INITIALIZED) {
+                this.initGA()
+                window.GA_INITIALIZED = true
+            }
+            this.logPageView()
+        }
+    }
+
     render() {
         let isLogin = false;
         let links;
@@ -33,13 +65,14 @@ class App extends Component {
             links = [
                 { label: 'Home', link: './', active: true },
                 { label: 'About', link: './aboutUs' },
-                { label: 'Create Account', link: '#createAccount' },
+                { label: 'Create Account', link: './myUploads' },
                 { label: 'Login', link: './myNode' },
             ];
         }
         return (
             <>
                 <CenMenu links={links} logo={logo} />
+                <Status ipfs={this.props.ipfs} {...this.props} />
                 <Router>
                     <Switch>
                         {/*All our Routes go here!*/}
@@ -58,4 +91,10 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+    return {
+        ipfs: state.ipfs
+    }
+}
+
+export default connect(mapStateToProps, actions)(App)
