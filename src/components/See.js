@@ -57,7 +57,21 @@ class Home extends Component {
     this.setState({
       loading: false
     })
-  }
+    }
+
+    download() {            //ToDo: add file name and type
+        fetch('https://ipfs.infura.io:5001/api/v0/cat/QmXBdBt7MmeVAVmzM97hhGiHyZwkaWX2MkhR7dd64B5YMf')
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'download.png';        //make 'download.png' a variable with file name
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
+    }
 
   render() {
     return (
@@ -95,6 +109,13 @@ class Home extends Component {
             </pre>
                 </div>
             </div>
+            <h3>Download File using Button</h3>
+            <button onClick={this.download}>Download</button>
+            <p />
+            <h3>Download File using Link</h3>
+            <img src={this.state.data} size='large' align="center" />
+            <a href="#" onClick={this.download}>Download</a>
+            <a href='https://ipfs.infura.io:5001/api/v0/cat/QmWwvxqHtcF93LRinEPjHzMzE1WCHsjBrv2Srzd8tQVRHr' download>Click to download</a>
           { this.state.modalOpen && <toast
             status={this.state.success ? 'ok' : 'critical' }>
               <p>{ this.state.success ? this.state.success : null }</p>
